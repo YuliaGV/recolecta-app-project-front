@@ -1,11 +1,24 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from '../layouts/Layout.astro';
+import "../styles/global.css";
 ---
 
 <Layout>
-	<Welcome />
+	<main class="min-h-screen flex items-center justify-center p-6">
+		<div>
+			<p>Redirigiendo...</p>
+		</div>
+	</main>
+
+	<script type="module">
+		// Redirige a /dashboard si hay token, si no a /login
+		try {
+			const token = localStorage.getItem('userToken');
+			if (token) location.replace('/dashboard');
+			else location.replace('/login');
+		} catch (err) {
+			location.replace('/login');
+		}
+	</script>
 </Layout>

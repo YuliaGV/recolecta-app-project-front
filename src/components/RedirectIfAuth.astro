@@ -1,0 +1,16 @@
+---
+---
+
+<!-- RedirectIfAuth: si el usuario ya tiene token, redirige al dashboard -->
+<script type="module" client:load>
+  try {
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      location.replace('/dashboard');
+    }
+  } catch (err) {
+    // ignore
+  }
+</script>
+
+<slot />

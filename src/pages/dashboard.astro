@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RequireAuth from '../components/RequireAuth.astro';
+---
+
+<Layout>
+  <RequireAuth>
+    <main class="min-h-screen p-6">
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-semibold">Dashboard</h1>
+        <p id="userInfo" class="mt-4 text-gray-700">Cargando usuario...</p>
+        <div class="mt-4 space-x-3">
+          <a href="/profile" class="text-blue-600 hover:underline">Perfil</a>
+          <a href="/new-collection" class="text-blue-600 hover:underline">Solicitar recolección</a>
+          <a href="/my-collections" class="text-blue-600 hover:underline">Mis recolecciones</a>
+        </div>
+        <button id="logoutBtn" class="mt-4 inline-block bg-red-600 text-white px-3 py-1 rounded">Cerrar sesión</button>
+      </div>
+
+      <script type="module">
+        const userInfo = document.getElementById('userInfo');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const email = localStorage.getItem('userEmail');
+        if (email) {
+          userInfo.textContent = `Sesión iniciada como: ${email}`;
+        } else {
+          userInfo.textContent = 'No hay usuario autenticado. Redirigiendo al login...';
+          setTimeout(() => location.replace('/login'), 1200);
+        }
+
+        logoutBtn.addEventListener('click', () => {
+          localStorage.removeItem('userEmail');
+          localStorage.removeItem('userToken');
+          location.replace('/login');
+        });
+      </script>
+    </main>
+  </RequireAuth>
+</Layout>

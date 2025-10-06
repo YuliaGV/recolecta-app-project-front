@@ -1,0 +1,18 @@
+---
+---
+
+<!-- RequireAuth: cliente-side guard. Si no hay token, redirige a /login -->
+<script type="module" client:load>
+  try {
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      // No autenticado -> enviamos a login
+      location.replace('/login');
+    }
+  } catch (err) {
+    // En caso de error en localStorage, redirigir también
+    location.replace('/login');
+  }
+</script>
+
+<slot />

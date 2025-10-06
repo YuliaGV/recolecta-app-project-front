@@ -1,0 +1,82 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RedirectIfAuth from '../components/RedirectIfAuth.astro';
+
+---
+
+<Layout>
+  <RedirectIfAuth>
+  <main class="min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+      <div class="text-center">
+        <svg class="mx-auto text-blue-600 w-12 h-12 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4zm-2 6a2 2 0 1 1 4 0v2h-4V8z"/></svg>
+        <h1 class="text-xl font-semibold">Iniciar sesión</h1>
+  <p class="text-sm text-gray-500">Accede a tu cuenta para gestionar recolecciones y seguimientos</p>
+      </div>
+
+      <div id="error" class="hidden bg-red-50 text-red-800 rounded px-3 py-2 mt-4" role="alert"></div>
+
+      <form id="loginForm" class="mt-4 space-y-3">
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+          <input id="email" name="email" type="email" required autocomplete="email" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500" />
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+          <input id="password" name="password" type="password" required autocomplete="current-password" class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500" />
+        </div>
+
+        <div>
+          <button type="submit" class="w-full h-11 bg-green-600 hover:bg-green-700 text-white rounded-md font-semibold">Ingresar</button>
+        </div>
+
+        <div class="text-center">
+          <a href="/register" class="text-sm text-blue-600 hover:underline">¿Aún no tienes una cuenta? Crear una cuenta.</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  </RedirectIfAuth>
+
+  <script type="module">
+    const MOCK_EMAIL = 'test@poli.com';
+    const MOCK_PASSWORD = '12345poli';
+
+    const form = document.getElementById('loginForm');
+    const errorEl = document.getElementById('error');
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.classList.remove('hidden');
+    }
+
+    function clearError() {
+      errorEl.textContent = '';
+      errorEl.classList.add('hidden');
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      clearError();
+
+      const formData = new FormData(form);
+      const email = (formData.get('email') || '').toString().trim();
+      const password = (formData.get('password') || '').toString();
+
+      if (!email || !password) {
+        showError('Por favor completa ambos campos.');
+        return;
+      }
+
+      if (email === MOCK_EMAIL && password === MOCK_PASSWORD) {
+        localStorage.setItem('userToken', 'fake-jwt-token-12345');
+        localStorage.setItem('userEmail', email);
+        console.log(`Login exitoso para: ${email}`);
+        location.replace('/dashboard');
+      } else {
+        showError('Credenciales incorrectas. Intenta con: test@poli.com / 12345poli');
+      }
+    });
+  </script>
+</Layout>

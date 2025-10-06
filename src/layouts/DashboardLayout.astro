@@ -1,0 +1,42 @@
+---
+import Layout from "./Layout.astro";
+import RequireAuth from "../components/RequireAuth.astro";
+---
+
+<Layout>
+  <RequireAuth>
+    <div class="flex min-h-screen">
+      <!-- Menú lateral -->
+      <aside class="w-64 bg-gray-100 p-6 flex flex-col min-h-screen">
+        <div>
+          <h2 class="text-xl font-semibold mb-4">Dashboard</h2>
+          <nav class="space-y-2">
+            <a href="/dashboard" class="block text-blue-600 hover:underline">Inicio</a>
+            <a href="/profile" class="block text-blue-600 hover:underline">Perfil</a>
+            <a href="/new-collection" class="block text-blue-600 hover:underline">Solicitar recolección</a>
+            <a href="/my-collections" class="block text-blue-600 hover:underline">Mis recolecciones</a>
+          </nav>
+        </div>
+
+        <!-- Botón logout pegado abajo -->
+        <button id="logoutBtn" class="mt-auto bg-red-600 text-white px-3 py-1 rounded">
+          Cerrar sesión
+        </button>
+      </aside>
+
+      <!-- Contenido dinámico -->
+      <main class="flex-1 p-6">
+        <slot />
+      </main>
+    </div>
+
+    <script type="module">
+      const logoutBtn = document.getElementById('logoutBtn');
+      logoutBtn?.addEventListener('click', () => {
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userToken');
+        location.replace('/login');
+      });
+    </script>
+  </RequireAuth>
+</Layout>

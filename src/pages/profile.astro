@@ -1,15 +1,10 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import RequireAuth from '../components/RequireAuth.astro';
+import Layout from "../layouts/Layout.astro";
+import RequireAuth from "../components/RequireAuth.astro";
+import DashboardLayout from "../layouts/DashboardLayout.astro";
 ---
 
-<Layout>
-  <RequireAuth>
-    <main class="min-h-screen p-6">
-      <div class="max-w-4xl mx-auto">
-        <h1 class="text-2xl font-semibold">Perfil</h1>
-        <p class="mt-4">Aquí puedes ver y editar tu perfil (placeholder).</p>
-      </div>
-    </main>
-  </RequireAuth>
-</Layout>
+<DashboardLayout>
+  <h1>Perfil</h1>
+  <p>Contenido del perfil...</p>
+</DashboardLayout>

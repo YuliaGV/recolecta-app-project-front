@@ -1,12 +1,94 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import RequireAuth from "../components/RequireAuth.astro";
 import DashboardLayout from "../layouts/DashboardLayout.astro";
+
+const user = {
+  nombre: "Juan Pérez",
+  correo: "juan.perez@mail.com",
+  telefono: "+57 300 123 4567",
+  documento: "CC 123456789",
+  direcciones: [
+    {
+      id: 1,
+      titulo: "Calle 123, Ciudad",
+      detalle: "Casa Portón verde, timbre 2",
+    },
+    {
+      id: 2,
+      titulo: "Av. Central 45, Piso 2",
+      detalle: "Oficina 2do piso",
+    },
+  ],
+};
 ---
 
 <DashboardLayout>
-  <div class="mx-4">
-    <h1 class="text-2xl font-semibold">Perfil</h1>
-    <p>Contenido del perfil...</p>
+  <div class="flex justify-center p-6">
+    <!-- Card principal -->
+    <div class="w-full max-w-3xl bg-white rounded-lg shadow-lg p-6">
+      <!-- Encabezado -->
+      <div class="flex items-center gap-4 mb-6">
+        <img
+          src="https://via.placeholder.com/100"
+          alt="Foto de perfil"
+          class="w-24 h-24 rounded-full object-cover border"
+        />
+        <div>
+          <h1 class="text-2xl font-bold">{user.nombre}</h1>
+          <p class="text-gray-500">ID XXX-XXX-XXX</p>
+        </div>
+      </div>
+
+      <!-- Datos personales -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Nombre completo</label>
+          <input type="text" value={user.nombre} class="mt-1 w-full border rounded p-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Correo</label>
+          <input type="email" value={user.correo} class="mt-1 w-full border rounded p-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+          <input type="text" value={user.telefono} class="mt-1 w-full border rounded p-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Documento</label>
+          <input type="text" value={user.documento} class="mt-1 w-full border rounded p-2" />
+        </div>
+      </div>
+
+      <!-- Botones de acción -->
+      <div class="flex gap-3 mb-8">
+        <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+          Cambiar foto
+        </button>
+        <button class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition">
+          Cambiar contraseña
+        </button>
+      </div>
+
+      <!-- Sección de direcciones -->
+      <h2 class="text-xl font-semibold mb-4">Direcciones</h2>
+      <p class="text-gray-600 mb-4">Gestiona tus direcciones de recolección</p>
+
+      {user.direcciones.map((dir) => (
+        <div class="flex justify-between items-center border rounded p-4 mb-3">
+          <div>
+            <p class="font-semibold">{dir.titulo}</p>
+            <p class="text-sm text-gray-600">{dir.detalle}</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">Ver mapa</button>
+            <button class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">Editar</button>
+          </div>
+        </div>
+      ))}
+
+      <!-- Botón agregar dirección -->
+      <button class="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+        + Agregar dirección
+      </button>
+    </div>
   </div>
 </DashboardLayout>

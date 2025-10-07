@@ -102,7 +102,8 @@ import DashboardLayout from '../layouts/DashboardLayout.astro';
       }
 
       showMessage('Solicitud creada correctamente. Redirigiendo a Mis Recolecciones...');
-      setTimeout(()=> location.replace('/my-collections'));
+      location.replace('/my-collections');
+
     });
   </script>
 </DashboardLayout>

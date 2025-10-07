@@ -159,9 +159,8 @@ import RedirectIfAuth from '../components/RedirectIfAuth.astro';
     submitBtn.disabled = true;
     submitBtn.textContent = 'Registrando...';
 
-    setTimeout(() => {
-      location.replace('/login');
-    });
+    location.replace('/login');
+
   });
 </script>
 

@@ -96,7 +96,7 @@ import RedirectIfAuth from '../components/RedirectIfAuth.astro';
       locality: (data.get('locality') || '').trim(),
     };
 
-    // ✅ Validar campos vacíos individualmente
+    //Validar campos vacíos individualmente
     const fieldNames = {
       name: 'Nombre completo',
       email: 'Correo electrónico',
@@ -113,33 +113,33 @@ import RedirectIfAuth from '../components/RedirectIfAuth.astro';
       }
     }
 
-    // ✅ Validar correo electrónico
+    //Validar correo electrónico
     const emailRegex = /^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/;
     if (!emailRegex.test(formData.email)) {
       showError('Por favor ingresa un correo electrónico válido.');
       return;
     }
 
-    // ✅ Validar teléfono (solo números, mínimo 10 dígitos)
+    //Validar teléfono (solo números, mínimo 10 dígitos)
     const phoneDigits = formData.phone.replace(/\D/g, '');
     if (!/^\d{10,}$/.test(phoneDigits)) {
       showError('El número de teléfono debe tener al menos 10 dígitos y solo números.');
       return;
     }
 
-    // ✅ Validar contraseña
+    //Validar contraseña
     if (formData.password.length < 6) {
       showError('La contraseña debe tener al menos 6 caracteres.');
       return;
     }
 
-    // ✅ Validar dirección
+    //Validar dirección
     if (formData.address.length < 10) {
       showError('La dirección debe tener al menos 10 caracteres.');
       return;
     }
 
-    // ✅ Guardar usuario en localStorage
+    //Guardar usuario en localStorage
     const newUser = {
       ...formData,
       id: Date.now(),
@@ -154,7 +154,7 @@ import RedirectIfAuth from '../components/RedirectIfAuth.astro';
       return;
     }
 
-    // ✅ Mostrar éxito y redirigir
+    //Mostrar éxito y redirigir
     showSuccess('¡Registro exitoso! Redirigiendo al login...');
     submitBtn.disabled = true;
     submitBtn.textContent = 'Registrando...';

@@ -5,18 +5,21 @@ import RedirectIfAuth from '../components/RedirectIfAuth.astro';
 
 <Layout>
   <RedirectIfAuth>
-    <main class="min-h-screen flex items-center justify-center p-6">
-  <div class="w-full max-w-2xl bg-white rounded-lg shadow-md p-6">
+    <main class="min-h-screen flex items-center justify-center p-6 bg-gray-50">
+      <div class="w-full max-w-2xl bg-white rounded-lg shadow-md p-6">
         <div class="text-center mb-4">
-          <!-- person icon -->
-          <svg class="mx-auto text-blue-600 w-12 h-12 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.418 0-8 1.79-8 4v2h16v-2c0-2.21-3.582-4-8-4z"/></svg>
+          <svg class="mx-auto text-blue-600 w-12 h-12 mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4.418 0-8 1.79-8 4v2h16v-2c0-2.21-3.582-4-8-4z"/>
+          </svg>
           <h1 class="text-2xl font-semibold">Crear cuenta</h1>
           <p class="text-sm text-gray-500 mt-2">Completa la información para registrarte y comenzar a gestionar recolecciones</p>
         </div>
 
+        <!-- Mensajes -->
         <div id="success" class="hidden bg-green-50 border border-green-200 text-green-800 rounded px-4 py-3 mb-4" role="status"></div>
         <div id="error" class="hidden bg-red-50 border border-red-200 text-red-800 rounded px-4 py-3 mb-4" role="alert"></div>
 
+        <!-- Formulario -->
         <form id="registerForm" class="grid grid-cols-1 md:grid-cols-2 gap-4" novalidate>
           <div class="md:col-span-2">
             <label for="name" class="block text-sm font-medium text-gray-700">Nombre Completo</label>
@@ -38,9 +41,19 @@ import RedirectIfAuth from '../components/RedirectIfAuth.astro';
             <input id="phone" name="phone" type="tel" required class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500" />
           </div>
 
+          <div class="md:col-span-2">
+            <label for="address" class="block text-sm font-medium text-gray-700">Dirección</label>
+            <input id="address" name="address" required class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500" />
+          </div>
+
+          <div class="md:col-span-2">
+            <label for="locality" class="block text-sm font-medium text-gray-700">Localidad</label>
+            <input id="locality" name="locality" required class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500" />
+          </div>
+
           <div class="md:col-span-2 flex items-center justify-between mt-2">
             <div class="w-1/2">
-              <button id="submitBtn" type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-greeb-600 hover:bg-green-700 text-white rounded-md font-semibold">Registrarme</button>
+              <button id="submitBtn" type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-semibold transition-colors">Registrarme</button>
             </div>
             <div class="text-sm">
               <a href="/login" id="toLogin" class="text-blue-600 hover:underline">¿Ya tienes cuenta? Inicia sesión.</a>
@@ -50,81 +63,107 @@ import RedirectIfAuth from '../components/RedirectIfAuth.astro';
       </div>
     </main>
 
-    <script type="module">
-      const form = document.getElementById('registerForm');
-      const errorEl = document.getElementById('error');
-      const successEl = document.getElementById('success');
+<script>
+  const form = document.getElementById('registerForm');
+  const errorEl = document.getElementById('error');
+  const successEl = document.getElementById('success');
+  const submitBtn = document.getElementById('submitBtn');
 
-      function showError(msg) {
-        successEl.classList.add('hidden');
-        errorEl.textContent = msg;
-        errorEl.classList.remove('hidden');
+  function showError(msg) {
+    successEl.classList.add('hidden');
+    errorEl.textContent = msg;
+    errorEl.classList.remove('hidden');
+  }
+
+  function showSuccess(msg) {
+    errorEl.classList.add('hidden');
+    successEl.textContent = msg;
+    successEl.classList.remove('hidden');
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    errorEl.classList.add('hidden');
+    successEl.classList.add('hidden');
+
+    const data = new FormData(form);
+    const formData = {
+      name: (data.get('name') || '').trim(),
+      email: (data.get('email') || '').trim(),
+      password: (data.get('password') || '').trim(),
+      phone: (data.get('phone') || '').trim(),
+      address: (data.get('address') || '').trim(),
+      locality: (data.get('locality') || '').trim(),
+    };
+
+    // ✅ Validar campos vacíos individualmente
+    const fieldNames = {
+      name: 'Nombre completo',
+      email: 'Correo electrónico',
+      password: 'Contraseña',
+      phone: 'Teléfono',
+      address: 'Dirección',
+      locality: 'Localidad',
+    };
+
+    for (const [key, value] of Object.entries(formData)) {
+      if (!value) {
+        showError(`Por favor completa el campo: ${fieldNames[key]}.`);
+        return;
       }
+    }
 
-      function showSuccess(msg) {
-        errorEl.classList.add('hidden');
-        successEl.textContent = msg;
-        successEl.classList.remove('hidden');
-      }
+    // ✅ Validar correo electrónico
+    const emailRegex = /^[\w.-]+@[\w.-]+\.[A-Za-z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
+      showError('Por favor ingresa un correo electrónico válido.');
+      return;
+    }
 
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        errorEl.classList.add('hidden');
-        successEl.classList.add('hidden');
+    // ✅ Validar teléfono (solo números, mínimo 10 dígitos)
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    if (!/^\d{10,}$/.test(phoneDigits)) {
+      showError('El número de teléfono debe tener al menos 10 dígitos y solo números.');
+      return;
+    }
 
-        const data = new FormData(form);
-        const formData = {
-          name: (data.get('name') || '').toString().trim(),
-          email: (data.get('email') || '').toString().trim(),
-          password: (data.get('password') || '').toString(),
-          phone: (data.get('phone') || '').toString().trim(),
-          address: (data.get('address') || '').toString().trim(),
-          locality: (data.get('locality') || '').toString().trim(),
-        };
+    // ✅ Validar contraseña
+    if (formData.password.length < 6) {
+      showError('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
 
-        // Validaciones
-        if (formData.password.length < 6) {
-          showError('La contraseña debe tener al menos 6 caracteres.');
-          return;
-        }
+    // ✅ Validar dirección
+    if (formData.address.length < 10) {
+      showError('La dirección debe tener al menos 10 caracteres.');
+      return;
+    }
 
-        const phoneDigits = formData.phone.replace(/\D/g, '');
-        if (!/^\d{10,}$/.test(phoneDigits)) {
-          showError('El teléfono debe tener al menos 10 dígitos.');
-          return;
-        }
+    // ✅ Guardar usuario en localStorage
+    const newUser = {
+      ...formData,
+      id: Date.now(),
+      points: 0,
+      isSubscribed: true,
+    };
 
-        if (formData.address.length < 10) {
-          showError('La dirección debe tener al menos 10 caracteres.');
-          return;
-        }
+    try {
+      localStorage.setItem(`user_${newUser.email}`, JSON.stringify(newUser));
+    } catch (err) {
+      showError('No se pudo guardar el usuario en localStorage.');
+      return;
+    }
 
-        if (!formData.email) {
-          showError('El correo es obligatorio.');
-          return;
-        }
+    // ✅ Mostrar éxito y redirigir
+    showSuccess('¡Registro exitoso! Redirigiendo al login...');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Registrando...';
 
-        // Simular guardado en localStorage
-        const newUser = {
-          ...formData,
-          id: Date.now(),
-          points: 0,
-          isSubscribed: true,
-        };
+    setTimeout(() => {
+      location.replace('/login');
+    }, 2500);
+  });
+</script>
 
-        try {
-          localStorage.setItem(`user_${newUser.email}`, JSON.stringify(newUser));
-        } catch (err) {
-          showError('No se pudo guardar el usuario en localStorage.');
-          return;
-        }
-
-        showSuccess('¡Registro exitoso! Redirigiendo al login...');
-
-        setTimeout(() => {
-          location.replace('/login');
-        }, 3000);
-      });
-    </script>
   </RedirectIfAuth>
 </Layout>

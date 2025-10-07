@@ -6,6 +6,7 @@ dist/
 
 # dependencies
 node_modules/
+.vscode/
 
 # logs
 npm-debug.log*
@@ -19,6 +20,7 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
 
 # jetbrains setting folder
 .idea/

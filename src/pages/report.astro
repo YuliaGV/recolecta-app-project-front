@@ -8,49 +8,17 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
     <p class="text-xs text-gray-500">Filtra y genera reportes de recolección</p>
   </div>
 
-  <!-- Formulario -->
-  <form
-    id="registerForm"
-    class="grid grid-cols-1 md:grid-cols-2 gap-4 m-4"
-    novalidate
-  >
-    <!-- Usuario -->
+  <form id="reportForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 m-4" novalidate>
     <div>
-      <label for="user" class="block text-sm font-medium text-gray-700"
-        >Usuario</label
-      >
-      <input
-        id="user"
-        name="user"
-        required
-        class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
-      />
+      <label for="company" class="block text-sm font-medium text-gray-700">Empresa</label>
+      <select id="company" name="company" required class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:ring-2 focus:ring-blue-400">
+        <option value="">Selecciona una empresa</option>
+      </select>
     </div>
 
-    <!-- Empresa -->
     <div>
-      <label for="company" class="block text-sm font-medium text-gray-700"
-        >Empresa</label
-      >
-      <input
-        id="company"
-        name="company"
-        required
-        class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
-      />
-    </div>
-
-    <!-- Localidad -->
-    <div>
-      <label for="locality" class="block text-sm font-medium text-gray-700"
-        >Localidad</label
-      >
-      <select
-        id="locality"
-        name="locality"
-        required
-        class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400"
-      >
+      <label for="locality" class="block text-sm font-medium text-gray-700">Localidad</label>
+      <select id="locality" name="locality" required class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-400">
         <option value="">Selecciona una localidad</option>
         <option>Suba</option>
         <option>Chapinero</option>
@@ -61,75 +29,150 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
       </select>
     </div>
 
-    <!-- Estado del reporte -->
     <div>
       <fieldset>
-        <legend class="block text-sm font-medium text-gray-700 mb-2"
-          >Tipo de Residuo</legend
-        >
+        <legend class="block text-sm font-medium text-gray-700 mb-2">Tipo de Residuo</legend>
         <div class="flex flex-col md:flex-row gap-4">
           <label class="flex items-center">
-            <input
-              type="radio"
-              name="wasteType"
-              value="inorganico"
-              required
-              class="text-green-600 focus:ring-green-500 focus:outline-none"
-              checked
-            />
+            <input type="radio" name="wasteType" value="inorganico" required checked class="text-green-600 focus:ring-green-500" />
             <span class="ml-2 text-gray-600">Inorgánico Reciclable</span>
           </label>
           <label class="flex items-center">
-            <input
-              type="radio"
-              name="wasteType"
-              value="peligroso"
-              class="text-red-600 focus:ring-red-500 focus:outline-none"
-            />
+            <input type="radio" name="wasteType" value="peligroso" class="text-red-600 focus:ring-red-500" />
             <span class="ml-2 text-gray-600">Peligroso (Especial)</span>
           </label>
         </div>
       </fieldset>
     </div>
 
-    <!-- Desde -->
-    <div>
-      <label for="from" class="block text-sm font-medium text-gray-700"
-        >Desde</label
-      >
-      <input
-        type="date"
-        id="from"
-        name="from"
-        required
-        class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
-      />
-    </div>
-
-    <!-- Hasta -->
-    <div>
-      <label for="until" class="block text-sm font-medium text-gray-700"
-        >Hasta</label
-      >
-      <input
-        type="date"
-        id="until"
-        name="until"
-        required
-        class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500"
-      />
-    </div>
-
-    <!-- Botón -->
-    <div class="md:col-span-2 flex items-center justify-between mt-2">
-      <div class="w-full">
-        <button
-          type="submit"
-          class="w-full inline-flex justify-center items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md font-semibold transition-colors"
-        >
-          Generar Reporte
-        </button>
-      </div>
+    <div class="md:col-span-2">
+      <button type="button" id="exportExcel" class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-semibold transition-colors">
+        Exportar a Excel
+      </button>
     </div>
   </form>
+
+  <section id="reportResults" class="mx-4 mt-6">
+    <h2 class="text-lg font-semibold mb-2">Resultados del Reporte</h2>
+    <div id="resultsContainer" class="space-y-3 text-sm text-gray-700">
+      <p>No se ha generado ningún reporte aún.</p>
+    </div>
+  </section>
+
+  <script type="module">
+    import * as XLSX from "https://cdn.sheetjs.com/xlsx-latest/package/xlsx.mjs";
+
+    const companySelect = document.getElementById("company");
+    const exportBtn = document.getElementById("exportExcel");
+    const resultsContainer = document.getElementById("resultsContainer");
+
+    const userEmail = localStorage.getItem("userEmail") || "guest";
+    const key = `collections_${userEmail}`;
+
+    // 🔹 Cargar empresas desde las recolecciones guardadas
+    function loadCompanies() {
+      const raw = localStorage.getItem(key);
+      if (!raw) {
+        companySelect.innerHTML = '<option value="">No hay empresas registradas</option>';
+        return;
+      }
+
+      const recolecciones = JSON.parse(raw);
+      const empresasUnicas = [...new Set(recolecciones.map((r) => r.company).filter(Boolean))];
+
+      if (empresasUnicas.length === 0) {
+        companySelect.innerHTML = '<option value="">No hay empresas disponibles</option>';
+        return;
+      }
+
+      companySelect.innerHTML = '<option value="">Selecciona una empresa</option>';
+      empresasUnicas.forEach((empresa) => {
+        const option = document.createElement("option");
+        option.value = empresa;
+        option.textContent = empresa;
+        companySelect.appendChild(option);
+      });
+    }
+
+    loadCompanies();
+
+    // 🔤 Normalizar texto (evita errores por mayúsculas o tildes)
+    const normalize = (str) =>
+      (str || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+    // 🟢 Generar y exportar Excel
+    exportBtn.addEventListener("click", () => {
+      const formData = new FormData(document.getElementById("reportForm"));
+      const company = formData.get("company");
+      const locality = formData.get("locality");
+      const wasteType = formData.get("wasteType");
+
+      if (!company || !locality || !wasteType) {
+        alert("Por favor completa todos los campos antes de exportar el reporte.");
+        return;
+      }
+
+      const recolecciones = JSON.parse(localStorage.getItem(key) || "[]");
+
+      // Filtrado flexible
+      const filtradas = recolecciones.filter((r) =>
+        normalize(r.company) === normalize(company) &&
+        normalize(r.locality) === normalize(locality) &&
+        normalize(r.wasteType || r.tipoResiduo || "") === normalize(wasteType)
+      );
+
+      if (filtradas.length === 0) {
+        resultsContainer.innerHTML = "<p class='text-red-500'>No se encontraron recolecciones con esos filtros.</p>";
+        return;
+      }
+
+      // Preparar datos para Excel
+      const data = [
+        ["Empresa", "Localidad", "Tipo de residuo", "Fecha de Solicitud", "Estado", "Peso (kg)", "Fecha de Recolección", "Turno"],
+        ...filtradas.map((r) => [
+          r.company,
+          r.locality,
+          r.wasteType || r.tipoResiduo || "—",
+          new Date(r.requestDate).toLocaleString(),
+          r.status || "Pendiente",
+          r.peso || "—",
+          r.fechaRecoleccion ? new Date(r.fechaRecoleccion).toLocaleString() : "—",
+          r.turno || "—",
+        ]),
+      ];
+
+      // Crear y descargar Excel
+      const worksheet = XLSX.utils.aoa_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
+      XLSX.writeFile(workbook, `reporte_${company}_${locality}.xlsx`);
+
+      renderResults(data);
+    });
+
+    // Mostrar tabla del reporte
+    function renderResults(data) {
+      resultsContainer.innerHTML = "";
+
+      const table = document.createElement("table");
+      table.className = "min-w-full border border-gray-300 text-sm text-gray-700";
+
+      data.forEach((row, i) => {
+        const tr = document.createElement("tr");
+        row.forEach((cell) => {
+          const el = document.createElement(i === 0 ? "th" : "td");
+          el.textContent = cell;
+          el.className = `border px-3 py-1 ${i === 0 ? "bg-gray-100 font-semibold" : "bg-white"}`;
+          tr.appendChild(el);
+        });
+        table.appendChild(tr);
+      });
+
+      resultsContainer.appendChild(table);
+    }
+  </script>
 </DashboardLayout>

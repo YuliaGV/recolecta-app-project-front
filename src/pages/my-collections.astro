@@ -32,25 +32,31 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 
       items.forEach((item) => {
         const li = document.createElement("li");
-        li.className = "border border-gray-200 rounded p-3";
+        li.className = "border border-gray-200 rounded p-3 bg-white shadow-sm";
         li.innerHTML = `
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="font-semibold">${item.wasteType} — ${item.locality}</div>
-              <div class="text-sm text-gray-600">${item.address}</div>
-              <div class="text-xs text-gray-500 mt-1">Solicitado: ${new Date(item.requestDate).toLocaleString()}</div>
-              <div class="text-xs text-gray-500">Estado: ${item.status}</div>
-            </div>
-            <div class="flex flex-col items-end space-y-2">
-              <button data-id="${item.id}" class="w-full text-white cursor-pointer font-semibold px-4 py-2 hover:bg-green-700 transition-colors rounded text-sm bg-green-600 mark">Marcar recogido</button>
-              <button data-id="${item.id}" class="w-full text-white cursor-pointer font-semibold px-4 py-2 hover:bg-red-700 transition-colors rounded text-sm bg-red-600 del">Eliminar</button>
+          <div class="flex flex-col space-y-2">
+            <div class="font-semibold text-lg text-green-700">${item.wasteType} — ${item.locality}</div>
+            <div class="text-sm text-gray-700"><strong>Empresa:</strong> ${item.company || "—"}</div>
+            <div class="text-sm text-gray-700"><strong>Usuario:</strong> ${item.userEmail}</div>
+            <div class="text-sm text-gray-700"><strong>Dirección:</strong> ${item.address}</div>
+            <div class="text-sm text-gray-700"><strong>Localidad:</strong> ${item.locality}</div>
+            <div class="text-xs text-gray-500 mt-1"><strong>Fecha de Solicitud:</strong> ${new Date(item.requestDate).toLocaleString()}</div>
+            <div class="text-xs text-gray-500"><strong>Estado:</strong> ${item.status}</div>
+
+            ${item.peso ? `<div class="text-xs text-gray-500"><strong>Peso:</strong> ${item.peso} kg</div>` : ""}
+            ${item.fechaRecoleccion ? `<div class="text-xs text-gray-500"><strong>Fecha de Recolección:</strong> ${new Date(item.fechaRecoleccion).toLocaleString()}</div>` : ""}
+            ${item.turno ? `<div class="text-xs text-gray-500"><strong>Turno:</strong> ${item.turno}</div>` : ""}
+
+            <div class="flex flex-col sm:flex-row gap-2 mt-3">
+              <button data-id="${item.id}" class="text-white cursor-pointer font-semibold px-4 py-2 bg-green-600 hover:bg-green-700 transition-colors rounded text-sm mark">Marcar recogido</button>
+              <button data-id="${item.id}" class="text-white cursor-pointer font-semibold px-4 py-2 bg-red-600 hover:bg-red-700 transition-colors rounded text-sm del">Eliminar</button>
             </div>
           </div>
         `;
         listEl.appendChild(li);
       });
 
-      // Eventos
+      // Evento eliminar
       listEl.querySelectorAll(".del").forEach((b) =>
         b.addEventListener("click", (e) => {
           const id = Number(e.currentTarget.dataset.id);
@@ -61,6 +67,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
         })
       );
 
+      // Evento marcar recogido
       listEl.querySelectorAll(".mark").forEach((b) =>
         b.addEventListener("click", (e) => {
           const id = Number(e.currentTarget.dataset.id);
@@ -71,10 +78,10 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
           const peso = prompt("Ingrese el peso recolectado (kg)");
           if (peso === null) return;
 
-          items[idx].status = "recogido"; // unificado
+          items[idx].status = "Recogido";
           items[idx].peso = peso;
           items[idx].fechaRecoleccion = new Date().toISOString();
-          items[idx].turno = items[idx].turno || "mañana";
+          items[idx].turno = items[idx].turno || "Mañana";
 
           localStorage.setItem(key, JSON.stringify(items));
           render();

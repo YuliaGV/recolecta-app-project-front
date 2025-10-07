@@ -1,13 +1,48 @@
 ---
-import DashboardLayout from '../layouts/DashboardLayout.astro';
+import DashboardLayout from "../layouts/DashboardLayout.astro";
+
+const users = [
+  { id: 1, name: "Juan Pérez", email: "juan@xxx.com", role: "Cliente" },
+  { id: 2, name: "Empresa", email: "empresa@xxx.com", role: "Empresa" },
+  { id: 3, name: "Admin", email: "admin@xxx.com", role: "Administrador" },
+];
 ---
 
 <DashboardLayout>
-  <h1 class="text-3xl font-bold mb-6 text-gray-800">Usuarios y Roles</h1>
-  <p class="text-xs text-gray-500">Administra cuentas: crear, modificar y eliminar</p>
-  <fieldset class="border border-gray-300 p-4 rounded-md">
-    <legend class="text-lg font-semibold text-gray-700">Tipo de Residuo</legend>
-    
-  </fieldset>
+  <div class="mx-4">
+
+    <h1 class="text-2xl font-semibold">Usuarios y Roles</h1>
+    <p class="text-xs text-gray-500 mb-4">Gestiona los usuarios de la plataforma y asigna sus roles</p>
+  </div>
+
+  <!-- Grid responsivo -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mx-4">
+    {users.map((user) => (
+      <div class="p-4 bg-white rounded shadow flex flex-col justify-between">
+        <!-- Info usuario -->
+        <div>
+          <div class="font-semibold text-gray-800">{user.name}</div>
+          <div class="text-sm text-gray-600">{user.email}</div>
+          <span
+            class={`inline-block mt-2 px-2 py-1 text-xs font-semibold rounded-full
+              ${user.role === "Cliente" ? "bg-green-100 text-green-700" : ""}
+              ${user.role === "Empresa" ? "bg-yellow-100 text-yellow-700" : ""}
+              ${user.role === "Administrador" ? "bg-purple-100 text-purple-700" : ""}`}
+          >
+            {user.role}
+          </span>
+        </div>
+
+        <!-- Acciones -->
+        <div class="flex gap-2 mt-4">
+          <button class="cursor-pointer flex-1 px-4 py-2 text-sm rounded font-semibold bg-blue-600 text-white hover:bg-blue-700">
+            Editar
+          </button>
+          <button class="cursor-pointer flex-1 px-4 py-2 text-sm rounded font-semibold bg-red-600 text-white hover:bg-red-700">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
 </DashboardLayout>
-  

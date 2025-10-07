@@ -1,24 +1,23 @@
 ---
-
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
 import "../styles/global.css";
 ---
 
 <Layout>
-	<main class="min-h-screen flex items-center justify-center p-6">
-		<div>
-			<p>Redirigiendo...</p>
-		</div>
-	</main>
+  <main class="min-h-screen flex items-center justify-center p-6">
+    <div>
+      <p>Redirigiendo...</p>
+    </div>
+  </main>
 
-	<script type="module">
-		// Redirige a /dashboard si hay token, si no a /login
-		try {
-			const token = localStorage.getItem('userToken');
-			if (token) location.replace('/dashboard');
-			else location.replace('/login');
-		} catch (err) {
-			location.replace('/login');
-		}
-	</script>
+  <script type="module">
+    // Redirige a /dashboard si hay token, si no a /login
+    try {
+      const token = localStorage.getItem("userToken");
+      if (token) location.replace("/dashboard");
+      else location.replace("/login");
+    } catch (err) {
+      location.replace("/login");
+    }
+  </script>
 </Layout>

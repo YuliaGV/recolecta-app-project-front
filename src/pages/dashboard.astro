@@ -1,16 +1,18 @@
 ---
-import DashboardLayout from '../layouts/DashboardLayout.astro';
+import DashboardLayout from "../layouts/DashboardLayout.astro";
 ---
 
 <DashboardLayout>
-  <h1 class="text-3xl font-bold mb-6 text-gray-800">Bienvenido al Dashboard</h1>
-  <p id="userInfo" class="mt-4 text-gray-700">Cargando usuario...</p>
+  <div class="mx-4">
+    <h1 class="text-2xl font-semibold">Bienvenido al Dashboard</h1>
+    <p id="userInfo" class="mt-4 text-gray-700">Cargando usuario...</p>
+  </div>
 
   <script type="module">
-    const userInfo = document.getElementById('userInfo');
-    const email = localStorage.getItem('userEmail');
+    const userInfo = document.getElementById("userInfo");
+    const email = localStorage.getItem("userEmail");
     userInfo.textContent = email
       ? `Sesión iniciada como: ${email}`
-      : 'No hay usuario autenticado.';
+      : "No hay usuario autenticado.";
   </script>
 </DashboardLayout>

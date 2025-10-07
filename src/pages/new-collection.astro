@@ -3,11 +3,9 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
 ---
 
 <DashboardLayout>
-  <h1 class="text-3xl font-bold mb-6 text-gray-800">
-    Solicitar Nueva Recolección
-  </h1>
+  <h1 class="text-2xl font-semibold mx-4">Solicitar Nueva Recolección</h1>
 
-  <form id="newCollectionForm" class="space-y-6">
+  <form id="newCollectionForm" class="space-y-6 mx-4">
     <fieldset class="border border-gray-300 p-4 rounded-md">
       <legend class="text-lg font-semibold text-gray-700"
         >Tipo de Residuo</legend
@@ -17,7 +15,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
           <input
             type="radio"
             name="wasteType"
-            value="inorganico"
+            value="Inorgánico"
             required
             class="text-green-600 focus:ring-green-500"
             checked
@@ -28,7 +26,7 @@ import DashboardLayout from "../layouts/DashboardLayout.astro";
           <input
             type="radio"
             name="wasteType"
-            value="peligroso"
+            value="Peligroso"
             required
             class="text-red-600 focus:ring-red-500"
           />
